@@ -17,6 +17,7 @@ gem "pg", group: :postgres
 gem "devise", '3.2.4'
 gem "devise-async", '0.9.0'
 gem 'omniauth', "~> 1.2.2"
+gem 'omniauth-azure-oauth2'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-twitter'
 gem 'omniauth-github'

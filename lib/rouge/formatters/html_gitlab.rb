@@ -47,7 +47,7 @@ module Rouge
         @lineanchors = lineanchors
         @lineanchorsid = lineanchorsid
         @anchorlinenos = anchorlinenos
-        @inline_theme = Theme.find(@inline_theme).new if @inline_theme.is_a?(String)
+        @inline_theme = Theme.find(inline_theme).new if inline_theme.is_a?(String)
       end
 
       def render(tokens)
@@ -93,16 +93,27 @@ module Rouge
       end
 
       def process_tokens(tokens)
-        num_lines = 0
-        last_val = ''
-        rendered = ''
+        rendered = []
+        current_line = ''
 
         tokens.each do |tok, val|
-          last_val = val
-          num_lines += val.scan(/\n/).size
-          rendered << span(tok, val)
+          # In the case of multi-line values (e.g. comments), we need to apply
+          # styling to each line since span elements are inline.
+          val.lines.each do |line|
+            stripped = line.chomp
+            current_line << span(tok, stripped)
+
+            if line.end_with?("\n")
+              rendered << current_line
+              current_line = ''
+            end
+          end
         end
 
+        # Add leftover text
+        rendered << current_line if current_line.present?
+
+        num_lines = rendered.size
         numbers = (@linenostart..num_lines + @linenostart - 1).to_a
 
         { numbers: numbers, code: rendered }
@@ -117,9 +128,8 @@ module Rouge
         numbers.join("\n")
       end
 
-      def wrap_lines(rendered)
+      def wrap_lines(lines)
         if @lineanchors
-          lines = rendered.split("\n")
           lines = lines.each_with_index.map do |line, index|
             number = index + @linenostart
 
@@ -136,14 +146,13 @@ module Rouge
           lines.join("\n")
         else
           if @linenos == 'inline'
-            lines = rendered.split("\n")
             lines = lines.each_with_index.map do |line, index|
               number = index + @linenostart
               "<span class=\"linenos\">#{number}</span>#{line}"
             end
             lines.join("\n")
           else
-            rendered
+            lines.join("\n")
           end
         end
       end
@@ -157,7 +166,7 @@ module Rouge
         else
           if @inline_theme
             rules = @inline_theme.style_for(tok).rendered_rules
-            "<span style=\"#{rules.to_a.join(';')}\">#{val}</span>"
+            "<span style=\"#{rules.to_a.join(';')}\"#{val}</span>"
           else
             "<span class=\"#{tok.shortname}\">#{val}</span>"
           end

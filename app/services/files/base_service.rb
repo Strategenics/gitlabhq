@@ -22,27 +22,15 @@ module Files
       end
 
       if sha = commit
-        after_commit(sha, @target_branch)
         success
       else
         error("Something went wrong. Your changes were not committed")
       end
-    rescue ValidationError => ex
+    rescue Repository::CommitError, Repository::PreReceiveError, ValidationError => ex
       error(ex.message)
     end
 
     private
-
-    def repository
-      project.repository
-    end
-
-    def after_commit(sha, branch)
-      commit = repository.commit(sha)
-      full_ref = "#{Gitlab::Git::BRANCH_REF_PREFIX}#{branch}"
-      old_sha = commit.parent_id || Gitlab::Git::BLANK_SHA
-      GitPushService.new.execute(project, current_user, old_sha, sha, full_ref)
-    end
 
     def current_branch
       @current_branch ||= params[:current_branch]

@@ -35,6 +35,7 @@ module TestEnv
     clean_test_path
 
     FileUtils.mkdir_p(repos_path)
+    FileUtils.mkdir_p(backup_path)
 
     # Setup GitLab shell for test instance
     setup_gitlab_shell
@@ -54,6 +55,10 @@ module TestEnv
   def enable_mailer
     allow_any_instance_of(NotificationService).to receive(:mailer).
       and_call_original
+  end
+
+  def disable_pre_receive
+    allow_any_instance_of(Gitlab::Git::Hook).to receive(:trigger).and_return(true)
   end
 
   # Clean /tmp/tests
@@ -125,6 +130,10 @@ module TestEnv
 
   def repos_path
     Gitlab.config.gitlab_shell.repos_path
+  end
+
+  def backup_path
+    Gitlab.config.backup.path
   end
 
   def copy_forked_repo_with_submodules(project)

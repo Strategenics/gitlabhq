@@ -9,6 +9,18 @@ v 7.14.1
   - Fix "Reload with full diff" URL button in compare branch view (Stan Hu)
   - Improve abuse reports management from admin area
 v 8.0.0 (unreleased)
+v 8.0.2 (unreleased)
+  - Skip check_initd_configured_correctly on omnibus installs
+  - Prevent double-prefixing of help page paths
+  - Clarify confirmation text on user deletion
+  - Make commit graphs responsive to window width changes (Stan Hu)
+  - Fix top margin for sign-in button on public pages
+  - Fix LDAP attribute mapping
+
+v 8.0.1
+  - Improve CI migration procedure and documentation
+
+v 8.0.0
   - Fix Markdown links not showing up in dashboard activity feed (Stan Hu)
   - Remove milestones from merge requests when milestones are deleted (Stan Hu)
   - Fix HTML link that was improperly escaped in new user e-mail (Stan Hu)
@@ -52,6 +64,8 @@ v 8.0.0 (unreleased)
   - Retrieving oauth token with LDAP credentials
   - Load Application settings from running database unless env var USE_DB=false
   - Added Drone CI integration (Kirill Zaitsev)
+  - Allow developers to retry builds
+  - Hide advanced project options for non-admin users
   - Fail builds if no .gitlab-ci.yml is found
   - Refactored service API and added automatically service docs generator (Kirill Zaitsev)
   - Added web_url key project hook_attrs (Kirill Zaitsev)

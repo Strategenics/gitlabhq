@@ -4,7 +4,11 @@
   - notes = commit.notes
   - note_count = notes.user.count
 
-= cache [project.id, commit.id, note_count] do
+- ci_commit = project.ci_commit(commit.sha)
+- cache_key = [project.path_with_namespace, commit.id, note_count]
+- cache_key.push(ci_commit.status) if ci_commit
+
+= cache(cache_key) do
   %li.commit.js-toggle-container
     .commit-row-title
       %strong.str-truncated
@@ -13,7 +17,11 @@
           %a.text-expander.js-toggle-button ...
 
       .pull-right
-        = link_to commit.short_id, namespace_project_commit_path(project.namespace, project, commit), class: "commit_short_id"
+        - if ci_commit
+          = render_ci_status(ci_commit)
+          &nbsp;
+        = clipboard_button
+        = link_to commit.short_id, namespace_project_commit_path(project.namespace, project, commit), class: "commit_short_id", data: {clipboard_text: commit.id}
 
       .notes_count
         - if note_count > 0

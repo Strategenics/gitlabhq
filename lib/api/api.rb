@@ -25,7 +25,7 @@ module API
     format :json
     content_type :txt, "text/plain"
 
-    helpers APIHelpers
+    helpers Helpers
 
     mount Groups
     mount GroupMembers
@@ -46,6 +46,7 @@ module API
     mount Services
     mount Files
     mount Commits
+    mount CommitStatus
     mount Namespaces
     mount Branches
     mount Labels

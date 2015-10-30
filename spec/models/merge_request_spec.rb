@@ -79,6 +79,12 @@ describe MergeRequest do
       expect(merge_request.commits).not_to be_empty
       expect(merge_request.mr_and_commit_notes.count).to eq(2)
     end
+
+    it "should include notes for commits from target project as well" do
+      create(:note, commit_id: merge_request.commits.first.id, noteable_type: 'Commit', project: merge_request.target_project)
+      expect(merge_request.commits).not_to be_empty
+      expect(merge_request.mr_and_commit_notes.count).to eq(3)
+    end
   end
 
   describe '#is_being_reassigned?' do
@@ -162,6 +168,17 @@ describe MergeRequest do
 
     it "doesn't detect WIP by default" do
       expect(subject).not_to be_work_in_progress
+    end
+  end
+
+  describe "#hook_attrs" do
+    it "has all the required keys" do
+      attrs = subject.hook_attrs
+      attrs = attrs.to_h
+      expect(attrs).to include(:source)
+      expect(attrs).to include(:target)
+      expect(attrs).to include(:last_commit)
+      expect(attrs).to include(:work_in_progress)
     end
   end
 

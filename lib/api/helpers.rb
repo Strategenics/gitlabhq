@@ -1,5 +1,5 @@
 module API
-  module APIHelpers
+  module Helpers
     PRIVATE_TOKEN_HEADER = "HTTP_PRIVATE_TOKEN"
     PRIVATE_TOKEN_PARAM = :private_token
     SUDO_HEADER ="HTTP_SUDO"
@@ -63,11 +63,11 @@ module API
           user_project.build_missing_services
 
           service_method = "#{underscored_service}_service"
-          
+
           send_service(service_method)
         end
       end
-   
+
       @project_service || not_found!("Service")
     end
 
@@ -149,7 +149,6 @@ module API
     end
 
     def attributes_for_keys(keys, custom_params = nil)
-      params_hash = custom_params || params
       attrs = {}
       keys.each do |key|
         if params[key].present? or (params.has_key?(key) and params[key] == false)

@@ -1,7 +1,5 @@
 module Ci
   class ApplicationController < ::ApplicationController
-    before_action :check_enable_flag!
-
     def self.railtie_helpers_paths
       "app/helpers/ci"
     end
@@ -9,21 +7,6 @@ module Ci
     helper_method :gl_project
 
     private
-
-    def check_enable_flag!
-      unless current_application_settings.ci_enabled
-        redirect_to(disabled_ci_projects_path)
-        return
-      end
-    end
-
-    def authenticate_public_page!
-      unless project.public
-        authenticate_user!
-
-        return access_denied! unless can?(current_user, :read_project, gl_project)
-      end
-    end
 
     def authenticate_token!
       unless project.valid_token?(params[:token])
@@ -38,7 +21,7 @@ module Ci
     end
 
     def authorize_manage_builds!
-      unless can?(current_user, :admin_project, gl_project)
+      unless can?(current_user, :manage_builds, gl_project)
         return page_404
       end
     end

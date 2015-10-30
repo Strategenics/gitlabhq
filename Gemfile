@@ -22,6 +22,7 @@ gem 'omniauth-bitbucket',     '~> 0.0.2'
 gem 'omniauth-github',        '~> 1.1.1'
 gem 'omniauth-gitlab',        '~> 1.0.0'
 gem 'omniauth-google-oauth2', '~> 0.2.0'
+gem 'omniauth-azure-oauth2',  '~> 0.0.5'
 gem 'omniauth-kerberos',      '~> 0.3.0', group: :kerberos
 gem 'omniauth-saml',          '~> 1.4.0'
 gem 'omniauth-shibboleth',    '~> 1.2.0'
